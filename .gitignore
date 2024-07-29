@@ -37,3 +37,4 @@ server/tomcat/nb-configuration.xml
 
 # Package Files #
 *.ear
+/nbproject/private/

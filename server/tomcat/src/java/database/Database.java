@@ -1548,4 +1548,102 @@ public class Database {
         return products;
     }
 
+    public static ArrayList<Coupon> getCoupons() {
+        try {
+            String sql = "{call getCoupons()}";
+            CallableStatement statement = connection.prepareCall(sql);
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<Coupon> coupons = new ArrayList<>();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String description = resultSet.getString("description");
+                double discount = resultSet.getDouble("discount");
+                String code = resultSet.getString("code");
+                Date expiry = resultSet.getDate("expiry");
+                double minPurchase = resultSet.getDouble("minPurchase");
+                double maxDiscount = resultSet.getDouble("maxDiscount");
+                int uses = resultSet.getInt("uses");
+
+                coupons.add(new Coupon(id, description, discount, code, code, minPurchase, maxDiscount, uses));
+            }
+            resultSet.close();
+            statement.close();
+            return coupons;
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public static int createCoupon(String description, double discount, String code, String expiry,
+            double minPurchase, double maxDiscount, int uses) {
+        try {
+            String sqlGetMaxId = "SELECT COALESCE(MAX(id), 0) AS max_id FROM coupons";
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sqlGetMaxId);
+            int couponId = 0;
+            if (resultSet.next()) {
+                couponId = resultSet.getInt("max_id") + 1;
+            }
+
+            String sql = "{call createCoupon(?, ?, ?, ?, ?, ?, ?, ?)}";
+            CallableStatement callableStatement = connection.prepareCall(sql);
+
+            callableStatement.setString(1, description);
+            callableStatement.setDouble(2, discount);
+            callableStatement.setString(3, code);
+            callableStatement.setString(4, expiry);
+            callableStatement.setDouble(5, minPurchase);
+            callableStatement.setDouble(6, maxDiscount);
+            callableStatement.setInt(7, uses);
+
+            callableStatement.registerOutParameter(8, Types.INTEGER);
+
+            callableStatement.execute();
+
+            int result = callableStatement.getInt(8);
+            return result;
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
+        }
+    }
+
+    public static int updateCoupon(int id, String code, String description, double discount, String expiry, double minPurchase, double maxDiscount, int uses) {
+        try {
+            String sql = "{call updateCoupon(?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+            CallableStatement callableStatement = connection.prepareCall(sql);
+            callableStatement.setInt(1, id);
+            callableStatement.setString(2, code);
+            callableStatement.setString(3, description);
+            callableStatement.setDouble(4, discount);
+            callableStatement.setString(5, expiry);
+            callableStatement.setDouble(6, minPurchase);
+            callableStatement.setDouble(7, maxDiscount);
+            callableStatement.setInt(8, uses);
+            callableStatement.registerOutParameter(9, Types.VARCHAR);
+
+            callableStatement.execute();
+
+            String result = callableStatement.getString(9);
+            if ("Update successful".equals(result)) {
+                return 1;
+            } else {
+                return -1;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
+        }
+    }
+
+    public static void main(String[] args) {
+        Database db = new Database();
+        ArrayList<Coupon> coupons = db.getCoupons();
+        for (Coupon cp : coupons) {
+            System.out.println(cp);
+        }
+//        int c = db.createCoupon("test", 100, "test", "2024-07-30", 10, 10, 10);
+//        int d = db.updateCoupon(12, "thu", "thu", 10, "2024-01-02", 100, 100, 100);
+    }
 }

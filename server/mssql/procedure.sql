@@ -1767,34 +1767,34 @@ BEGIN
 end
 GO
 
-create or alter procedure createCoupon
-    @description nvarchar(max),
-    @discount decimal(18,2),
-    @code nvarchar(10),
-    @expiry date,
-    @minPurchase decimal(18,2),
-    @maxDiscount decimal(18,2),
-    @uses int,
-    @result int output
-as
-begin
-    if exists (select 1
-    from coupons
-    where code = @code)
+    create or alter procedure createCoupon
+        @description nvarchar(max),
+        @discount decimal(18,2),
+        @code nvarchar(10),
+        @expiry date,
+        @minPurchase decimal(18,2),
+        @maxDiscount decimal(18,2),
+        @uses int,
+        @result int output
+    as
     begin
-        set @result = -1
-        return
+        if exists (select 1
+        from coupons
+        where code = @code)
+        begin
+            set @result = -1
+            return
+        end
+        else
+        begin
+            insert into coupons
+                (description, discount, code, expiry, minPurchase, maxDiscount, uses)
+            values
+                (@description, @discount, @code, @expiry, @minPurchase, @maxDiscount, @uses)
+            set @result = 1
+        end
     end
-    else
-    begin
-        insert into coupons
-            (description, discount, code, expiry, minPurchase, maxDiscount, uses)
-        values
-            (@description, @discount, @code, @expiry, @minPurchase, @maxDiscount, @uses)
-        set @result = 1
-    end
-end
-go
+    go
 
 create or alter procedure getCoupons
 as
@@ -1846,38 +1846,46 @@ begin
 end
 go
 
-create or alter procedure updateCoupon
-    @code nvarchar(10),
-    @description nvarchar(max),
-    @discount decimal(18,2),
-    @expiry date,
-    @minPurchase decimal(18,2),
-    @maxDiscount decimal(18,2),
-    @uses int,
-    @result int output
-as
-begin
-    if not exists (select 1
-    from coupons
-    where code = @code)
-    begin
-        set @result = -1
-        return
-    end
-    else
-    begin
-        update coupons
-        set description = @description,
-            discount = @discount,
-            expiry = @expiry,
-            minPurchase = @minPurchase,
-            maxDiscount = @maxDiscount,
-            uses = @uses
-        where code = @code
-        set @result = 1
-    end
-end
-go
+CREATE OR ALTER PROCEDURE updateCoupon
+    @id INT,
+    @code NVARCHAR(10),
+    @description NVARCHAR(MAX),
+    @discount DECIMAL(18,2),
+    @expiry DATE,
+    @minPurchase DECIMAL(18,2),
+    @maxDiscount DECIMAL(18,2),
+    @uses INT,
+    @result NVARCHAR(50) OUTPUT
+AS
+BEGIN
+    IF EXISTS (SELECT 1
+               FROM coupons
+               WHERE code = @code AND id != @id)
+    BEGIN
+        SET @result = 'Already exists: ' + @code
+        RETURN
+    END
+
+    IF NOT EXISTS (SELECT 1
+                   FROM coupons
+                   WHERE id = @id)
+    BEGIN
+        SET @result = 'Coupon not found with ID ' + CAST(@id AS NVARCHAR)
+        RETURN
+    END
+
+    UPDATE coupons
+    SET description = @description,
+        discount = @discount,
+        expiry = @expiry,
+        minPurchase = @minPurchase,
+        maxDiscount = @maxDiscount,
+        uses = @uses
+    WHERE id = @id
+
+    SET @result = 'Update successful'
+END
+GO
 
 create or alter procedure adjustCouponUses
     @code nvarchar(10),

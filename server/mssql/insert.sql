@@ -3646,3 +3646,115 @@ BEGIN
 
     SET @i = @i + 1;
 END;
+
+-- Add Coupons 
+
+EXEC createCoupon 
+    @description = 'Summer Sale 10% Off',
+    @discount = 10.00,
+    @code = 'SUM10',
+    @expiry = '2024-08-31',
+    @minPurchase = 50.00,
+    @maxDiscount = 20.00,
+    @uses = 100,
+    @result = @result OUTPUT;
+
+EXEC createCoupon 
+    @description = 'Winter Clearance 15% Off',
+    @discount = 15.00,
+    @code = 'WIN15',
+    @expiry = '2024-12-31',
+    @minPurchase = 75.00,
+    @maxDiscount = 30.00,
+    @uses = 200,
+    @result = @result OUTPUT;
+
+EXEC createCoupon 
+    @description = 'Black Friday 20% Off',
+    @discount = 20.00,
+    @code = 'BF20',
+    @expiry = '2024-11-30',
+    @minPurchase = 100.00,
+    @maxDiscount = 50.00,
+    @uses = 300,
+    @result = @result OUTPUT;
+
+EXEC createCoupon 
+    @description = 'Cyber Monday 25% Off',
+    @discount = 25.00,
+    @code = 'CM25',
+    @expiry = '2024-11-30',
+    @minPurchase = 150.00,
+    @maxDiscount = 75.00,
+    @uses = 150,
+    @result = @result OUTPUT;
+
+EXEC createCoupon 
+    @description = 'New Year 30% Off',
+    @discount = 30.00,
+    @code = 'NY30',
+    @expiry = '2025-01-31',
+    @minPurchase = 200.00,
+    @maxDiscount = 100.00,
+    @uses = 250,
+    @result = @result OUTPUT;
+
+EXEC createCoupon 
+    @description = 'Valentine’s Day 10% Off',
+    @discount = 10.00,
+    @code = 'VD10',
+    @expiry = '2024-02-14',
+    @minPurchase = 30.00,
+    @maxDiscount = 15.00,
+    @uses = 120,
+    @result = @result OUTPUT;
+
+EXEC createCoupon 
+    @description = 'Easter Sale 15% Off',
+    @discount = 15.00,
+    @code = 'EAS15',
+    @expiry = '2024-04-30',
+    @minPurchase = 60.00,
+    @maxDiscount = 25.00,
+    @uses = 180,
+    @result = @result OUTPUT;
+
+EXEC createCoupon 
+    @description = 'Back to School 20% Off',
+    @discount = 20.00,
+    @code = 'BTS20',
+    @expiry = '2024-09-30',
+    @minPurchase = 80.00,
+    @maxDiscount = 40.00,
+    @uses = 160,
+    @result = @result OUTPUT;
+
+EXEC createCoupon 
+    @description = 'Labor Day 15% Off',
+    @discount = 15.00,
+    @code = 'LD15',
+    @expiry = '2024-09-02',
+    @minPurchase = 70.00,
+    @maxDiscount = 30.00,
+    @uses = 200,
+    @result = @result OUTPUT;
+
+EXEC createCoupon 
+    @description = 'Halloween Special 20% Off',
+    @discount = 20.00,
+    @code = 'HAL20',
+    @expiry = '2024-10-31',
+    @minPurchase = 90.00,
+    @maxDiscount = 45.00,
+    @uses = 220,
+    @result = @result OUTPUT;
+
+EXEC createCoupon 
+    @description = 'Thanksgiving 25% Off',
+    @discount = 25.00,
+    @code = 'TG25',
+    @expiry = '2024-11-28',
+    @minPurchase = 120.00,
+    @maxDiscount = 60.00,
+    @uses = 130,
+    @result = @result OUTPUT;
