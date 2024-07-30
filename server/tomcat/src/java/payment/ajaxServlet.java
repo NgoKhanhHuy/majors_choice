@@ -24,6 +24,7 @@ import main.User;
 import packages.wrap.Cart;
 import packages.wrap.Order;
 import packages.wrap.OrderInfo;
+import packages.wrap.Product;
 import packages.wrap.ProductCount;
 
 public class ajaxServlet extends HttpServlet {
@@ -31,7 +32,20 @@ public class ajaxServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // check if discountedCart is null
         Cart cart = (Cart) request.getSession().getAttribute("tempCart");
+        if (request.getSession().getAttribute("DiscountedCart") != null) {
+            cart = (Cart) request.getSession().getAttribute("DiscountedCart");
+            for (Product product : cart.products) {
+                for (ProductCount productCount : cart.quantities) {
+                    if (product.id == productCount.id) {
+                        product.sellingPrice = productCount.pricePer;
+                    }
+                }
+            }
+
+        }
+
         request.getSession().setAttribute("cartObject", cart);
 
         String fullName = request.getParameter("fullName");

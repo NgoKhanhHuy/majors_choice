@@ -318,7 +318,7 @@
                   <input type="text" name="couponCode" placeholder="Coupon Code" value="${appliedCoupon}"
                     class="cofirm-your-order-componment-user-name input" />
                   <button type="submit" name="action" value="applyCoupon"
-                    class="confirm-your-order-component-continue thq-button-filled button">
+                    class="confirm-your-order-component-apply-coupon thq-button-filled button">
                     Apply Coupon
                   </button>
                 </div>

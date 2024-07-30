@@ -79,6 +79,7 @@ public class CartServlet extends HttpServlet {
                 response.sendRedirect("/Cart");
                 break;
             case "checkout":
+                request.getSession().removeAttribute("DiscountedCart");
                 checkout(request, response, currentUser, true);
                 break;
             case "restore":
@@ -117,6 +118,7 @@ public class CartServlet extends HttpServlet {
         if (!error.equals("")) {
             request.setAttribute("couponStatus", error);
             request.getSession().setAttribute("DiscountedCart", request.getSession().getAttribute("tempCart"));
+            request.getSession().removeAttribute("DiscountedCart");
             return;
         } else {
             Coupon coupon = Database.getCouponNumbers(request.getParameter("couponCode"));
