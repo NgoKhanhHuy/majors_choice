@@ -1548,4 +1548,50 @@ public class Database {
         return products;
     }
 
+    public static int reserveCoupon(String code) {
+        try {
+            String sql = "{call reserveCoupon(?, ?)}";
+            CallableStatement statement = connection.prepareCall(sql);
+            statement.setString(1, code);
+            statement.registerOutParameter(2, Types.INTEGER);
+
+            statement.execute();
+            return statement.getInt(2);
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+
+    public static double getCouponDiscount(String code) {
+        try {
+            String sql = "{call getCouponDiscount(?, ?)}";
+            CallableStatement statement = connection.prepareCall(sql);
+            statement.setString(1, code);
+            statement.registerOutParameter(2, Types.DOUBLE);
+
+            statement.execute();
+            return statement.getDouble(2);
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    public static Coupon getCouponNumbers(String code) {
+        try {
+            String sql = "{call getCouponNumbers(?, ?, ?, ?)}";
+            CallableStatement statement = connection.prepareCall(sql);
+            statement.setString(1, code);
+            statement.registerOutParameter(2, Types.DECIMAL);
+            statement.registerOutParameter(3, Types.DECIMAL);
+            statement.registerOutParameter(4, Types.DECIMAL);
+
+            statement.execute();
+            return new Coupon(statement.getDouble(2), statement.getDouble(3), statement.getDouble(4), code);
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }

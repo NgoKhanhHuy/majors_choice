@@ -9,7 +9,6 @@
 
 .navmain-container1 {
   width: 100%;
-
   height: 11vh;
   display: flex;
   opacity: 1;
@@ -680,6 +679,21 @@
   border-bottom-width: 0px;
 }
 
+.coupon {
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  border-color: var(--dl-color-theme-neutral-dark);
+  border-width: 2px;
+  flex-direction: column;
+  padding-bottom: var(--dl-space-space-unit);
+  justify-content: flex-start;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+}
+
 .cofirm-your-order-componment-heading1 {
   font-size: 1.75rem;
   font-style: normal;
@@ -1063,6 +1077,10 @@
   }
 
   .cofirm-your-order-componment-shipping-infor {
+    padding-bottom: var(--dl-space-space-twounits);
+  }
+
+  .coupon {
     padding-bottom: var(--dl-space-space-twounits);
   }
 

@@ -24,7 +24,36 @@ public class Cart {
         return Validation.validate(this);
     }
 
+    public void updateTotal() {
+        total = 0;
+        for (ProductCount productCount : quantities) {
+            total += productCount.pricePer * productCount.count;
+        }
+    }
+
     public void updateQuantity() {
+        buyable = true;
+
+        HashMap<Integer, ProductCount> productCountMap = new HashMap<>();
+        for (Product product : products) {
+            ProductCount productCount = productCountMap.get(product.id);
+            if (productCount == null) {
+                productCount = new ProductCount(product.id, 0, product.name, product.sellingPrice);
+                productCountMap.put(product.id, productCount);
+            }
+            productCount.count += 1;
+
+            if (!productCount.error.equals("")) {
+                buyable = false;
+            }
+        }
+        quantities.clear();
+        quantities.addAll(productCountMap.values());
+        updateTotal();
+        updateCart();
+    }
+
+    public void updateQuantityTemp() {
         buyable = true;
 
         HashMap<Integer, ProductCount> productCountMap = new HashMap<>();
@@ -47,7 +76,6 @@ public class Cart {
         }
         quantities.clear();
         quantities.addAll(productCountMap.values());
-        updateCart();
     }
 
     public void clearCart() {

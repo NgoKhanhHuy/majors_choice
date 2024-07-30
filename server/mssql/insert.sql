@@ -3646,3 +3646,12 @@ BEGIN
 
     SET @i = @i + 1;
 END;
+
+INSERT INTO coupons(description, discount, code, expiry, minPurchase, maxDiscount, uses)
+VALUES
+('Get 10% off on your next purchase', 10.00, 'SAVE10', '2025-12-31', 2000000, 300000, 10),
+('Enjoy 15% off on selected items', 15.00, 'DEAL15', '2025-12-31', 2500000, 500000, 10),
+('Save 20% on your order', 20.00, 'DISCOUNT20', '2025-12-31', 4000000, 2000000, 10),
+('Get 25% off on all products', 25.00, 'SALE25', '2025-12-31', 4000000, 1500000, 10),
+('Enjoy 30% off on your purchase', 30.00, 'SAVE30', '2025-12-31', 1000000, 300000, 10),
+('50% off everything', 50.00, '50OFF', '2025-12-31', 0, 99999999, 999);

@@ -1139,8 +1139,8 @@ CREATE or alter PROCEDURE updateProductCPU
 AS
 BEGIN
     IF EXISTS (SELECT 1
-               FROM products
-               WHERE name = @name AND id != @id)
+    FROM products
+    WHERE name = @name AND id != @id)
     BEGIN
         SET @result = 'Already exists:' + @name
         RETURN
@@ -1192,8 +1192,8 @@ CREATE or alter PROCEDURE updateProductGPU
 AS
 BEGIN
     IF EXISTS (SELECT 1
-               FROM products
-               WHERE name = @name AND id != @id)
+    FROM products
+    WHERE name = @name AND id != @id)
     BEGIN
         SET @result = 'Already exists:' + @name
         RETURN
@@ -1246,8 +1246,8 @@ CREATE or alter PROCEDURE updateProductMotherboard
 AS
 BEGIN
     IF EXISTS (SELECT 1
-               FROM products
-               WHERE name = @name AND id != @id)
+    FROM products
+    WHERE name = @name AND id != @id)
     BEGIN
         SET @result = 'Already exists:' + @name
         RETURN
@@ -1297,8 +1297,8 @@ CREATE or alter PROCEDURE updateProductPSU
 AS
 BEGIN
     IF EXISTS (SELECT 1
-               FROM products
-               WHERE name = @name AND id != @id)
+    FROM products
+    WHERE name = @name AND id != @id)
     BEGIN
         SET @result = 'Already exists:' + @name
         RETURN
@@ -1343,8 +1343,8 @@ CREATE or alter PROCEDURE updateProductRAM
 AS
 BEGIN
     IF EXISTS (SELECT 1
-               FROM products
-               WHERE name = @name AND id != @id)
+    FROM products
+    WHERE name = @name AND id != @id)
     BEGIN
         SET @result = 'Already exists:' + @name
         RETURN
@@ -1390,8 +1390,8 @@ CREATE or alter PROCEDURE updateProductSSD
 AS
 BEGIN
     IF EXISTS (SELECT 1
-               FROM products
-               WHERE name = @name AND id != @id)
+    FROM products
+    WHERE name = @name AND id != @id)
     BEGIN
         SET @result = 'Already exists:' + @name
         RETURN
@@ -1435,8 +1435,8 @@ CREATE or alter PROCEDURE updateProductCase
 AS
 BEGIN
     IF EXISTS (SELECT 1
-               FROM products
-               WHERE name = @name AND id != @id)
+    FROM products
+    WHERE name = @name AND id != @id)
     BEGIN
         SET @result = 'Already exists:' + @name
         RETURN
@@ -1731,7 +1731,8 @@ CREATE or alter PROCEDURE getFavoriteProducts
     @userId INT
 AS
 BEGIN
-    SELECT * from favorites
+    SELECT *
+    from favorites
     WHERE userId = @userId
 END
 go
@@ -1801,6 +1802,19 @@ as
 begin
     select *
     from coupons
+end
+go
+
+create or alter procedure getCouponNumbers
+    @code nvarchar(10),
+    @minPurchase decimal(18,2) output,
+    @maxDiscount decimal(18,2) output,
+    @discount decimal(18,2) output
+as
+begin
+    select @minPurchase = minPurchase, @maxDiscount = maxDiscount, @discount = discount
+    from coupons
+    where code = @code
 end
 go
 
@@ -1879,13 +1893,48 @@ begin
 end
 go
 
-create or alter procedure adjustCouponUses
+create or alter procedure reserveCoupon
     @code nvarchar(10),
-    @uses int
+    @result int output
 as
 begin
-    update coupons
-    set uses = uses + @uses
-    where code = @code
+    if not exists (select 1
+    from coupons
+    where code = @code)
+    begin
+        set @result = -1
+        -- doesnt exist
+        return
+    end
+    else
+    if (select expiry
+    from coupons
+    where code = @code) < getdate()
+    begin
+        set @result = -2
+        -- expired
+        return
+    end
+    else
+    begin
+        declare @uses int
+        select @uses = uses
+        from coupons
+        where code = @code
+
+        if @uses = 0
+        begin
+            set @result = -3
+            -- out of uses
+            return
+        end
+        else
+        begin
+            update coupons
+            set uses = uses - 1
+            where code = @code
+            set @result = 1
+        end
+    end
 end
 go

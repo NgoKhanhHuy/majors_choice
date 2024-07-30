@@ -309,6 +309,23 @@
                     placeholder="Phone" class="cofirm-your-order-componment-phone input" required />
                 </div>
               </form>
+              <form class="coupon" action="/Cart" method="post">
+                <span class="cofirm-your-order-componment-heading1">
+                  <span>Discount Coupon:</span>
+                  <br />
+                </span>
+                <div class="cofirm-your-order-componment-information">
+                  <input type="text" name="couponCode" placeholder="Coupon Code" value="${appliedCoupon}"
+                    class="cofirm-your-order-componment-user-name input" />
+                  <button type="submit" name="action" value="applyCoupon"
+                    class="confirm-your-order-component-continue thq-button-filled button">
+                    Apply Coupon
+                  </button>
+                </div>
+                <span class="cofirm-your-order-componment-value1">
+                  ${couponStatus}
+                </span>
+              </form>
               <form action="/payment/vnpayajax" id="frmCreateOrder" method="post"
                 class="cofirm-your-order-componment-payment-method">
                 <input type="hidden" type="text" name="amount" value="${cartPriceDouble}" />
@@ -320,7 +337,7 @@
                 <div class="cofirm-your-order-componment-method">
                   <div class="cofirm-your-order-componment-cash">
                     <input type="radio" name="paymentMethod" value="Cash"
-                      class="cofirm-your-order-componment-radiobutton" checked/>
+                      class="cofirm-your-order-componment-radiobutton" checked />
                     <span class="cofirm-your-order-componment-text22">
                       Cash on Delivery
                     </span>
