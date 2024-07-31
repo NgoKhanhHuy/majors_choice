@@ -48,5 +48,5 @@ This feature ensures the compatibility of the selected components. Here are the 
 | RAM Slots                  | Enough slots                   |                                                                  |
 |                            | Insufficient slots             | Reduce RAM sticks or choose another Motherboard.                 |
 | PSU TDP                    | TDP > CPU + GPU TDPs + 30%     |                                                                  |
-|                            | TDP <= CPU + GPU TDPs + 30%    | Choose higher TDP PSU.                                           |
-adsfdf
+|                            | TDP <= CPU + GPU TDPs + 30%    | Choose higher TDP PSU. 
+ascvdgdfs                                          
